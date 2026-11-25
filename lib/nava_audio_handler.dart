@@ -10,11 +10,11 @@ import 'navidrome_client.dart';
 typedef AudioTrackSelector = Future<void> Function(String trackId);
 typedef AudioTrackSkipper = Future<void> Function(int direction);
 
-/// Bridges Navika's existing player and library to Android Auto and system
+/// Bridges Nava's existing player and library to Android Auto and system
 /// media controls. The Flutter UI remains the owner of queue policy.
-class NavikaAudioHandler extends BaseAudioHandler
+class NavaAudioHandler extends BaseAudioHandler
     with QueueHandler, SeekHandler {
-  NavikaAudioHandler(this._player, this._onSelectTrack, this._onSkip) {
+  NavaAudioHandler(this._player, this._onSelectTrack, this._onSkip) {
     _subscriptions.add(
       _player.playbackEventStream.listen((_) => _broadcastState()),
     );
@@ -23,11 +23,11 @@ class NavikaAudioHandler extends BaseAudioHandler
     );
   }
 
-  static const _allMusicId = 'navika:all-music';
-  static const _favoritesId = 'navika:favorites';
-  static const _recentId = 'navika:recently-played';
-  static const _smartPlaylistsId = 'navika:smart-playlists';
-  static const _playlistsId = 'navika:playlists';
+  static const _allMusicId = 'nava:all-music';
+  static const _favoritesId = 'nava:favorites';
+  static const _recentId = 'nava:recently-played';
+  static const _smartPlaylistsId = 'nava:smart-playlists';
+  static const _playlistsId = 'nava:playlists';
 
   final AudioPlayer _player;
   final AudioTrackSelector _onSelectTrack;
@@ -172,8 +172,8 @@ class NavikaAudioHandler extends BaseAudioHandler
         ),
       ];
     }
-    if (parentMediaId.startsWith('navika:playlist:')) {
-      final encoded = parentMediaId.substring('navika:playlist:'.length);
+    if (parentMediaId.startsWith('nava:playlist:')) {
+      final encoded = parentMediaId.substring('nava:playlist:'.length);
       final name = utf8.decode(base64Url.decode(base64Url.normalize(encoded)));
       return (_playlists[name] ?? const <String>[])
           .map((id) => _itemsById[id])
@@ -181,8 +181,8 @@ class NavikaAudioHandler extends BaseAudioHandler
           .take(100)
           .toList();
     }
-    if (parentMediaId.startsWith('navika:smart-playlist:')) {
-      final encoded = parentMediaId.substring('navika:smart-playlist:'.length);
+    if (parentMediaId.startsWith('nava:smart-playlist:')) {
+      final encoded = parentMediaId.substring('nava:smart-playlist:'.length);
       final name = utf8.decode(base64Url.decode(base64Url.normalize(encoded)));
       return (_smartPlaylists[name] ?? const <String>[])
           .map((id) => _itemsById[id])
@@ -239,10 +239,10 @@ class NavikaAudioHandler extends BaseAudioHandler
   }
 
   String _playlistId(String name) =>
-      'navika:playlist:${base64Url.encode(utf8.encode(name)).replaceAll('=', '')}';
+      'nava:playlist:${base64Url.encode(utf8.encode(name)).replaceAll('=', '')}';
 
   String _smartPlaylistId(String name) =>
-      'navika:smart-playlist:${base64Url.encode(utf8.encode(name)).replaceAll('=', '')}';
+      'nava:smart-playlist:${base64Url.encode(utf8.encode(name)).replaceAll('=', '')}';
 
   void _broadcastState({int? queueIndex}) {
     final state = _player.playerState;
@@ -258,6 +258,7 @@ class NavikaAudioHandler extends BaseAudioHandler
         controls: [
           MediaControl.skipToPrevious,
           state.playing ? MediaControl.pause : MediaControl.play,
+          MediaControl.stop,
           MediaControl.skipToNext,
         ],
         systemActions: const {

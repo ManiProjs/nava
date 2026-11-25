@@ -1,6 +1,6 @@
-# Navika
+# Nava
 
-Navika is a cross-platform music player for [Navidrome](https://www.navidrome.org/) servers, built with Flutter. It brings your streamed music library, playback queue, favorites, playlists, and listening insights into a focused desktop-and-mobile app.
+Nava is a cross-platform music player for [Navidrome](https://www.navidrome.org/) servers, built with Flutter. It brings your streamed music library, playback queue, favorites, playlists, and listening insights into a focused desktop-and-mobile app.
 
 ## Features
 
@@ -19,7 +19,7 @@ Navika is a cross-platform music player for [Navidrome](https://www.navidrome.or
 
 - [Flutter](https://docs.flutter.dev/get-started/install) with a Dart SDK compatible with the version in `pubspec.yaml`.
 - Access to a running Navidrome server and a user account on that server.
-- Network access from the device running Navika to the server URL.
+- Network access from the device running Nava to the server URL.
 
 ## Getting started
 
@@ -30,7 +30,7 @@ flutter pub get
 flutter run
 ```
 
-When Navika opens, use the connection flow to enter your Navidrome server URL, username, and password. Use the server's reachable **HTTPS** address. Plain HTTP connections are rejected because they expose authentication tokens and streamed traffic to network interception.
+When Nava opens, use the connection flow to enter your Navidrome server URL, username, and password. Use the server's reachable **HTTPS** address. ~~Plain HTTP connections are rejected because they expose authentication tokens and streamed traffic to network interception~~ Nava doesn't require HTTPS anymore, although it's highly recommended to add one.
 
 ## Build
 
@@ -70,7 +70,7 @@ flutter test
 
 ## Data and privacy
 
-Navika stores ordinary app preferences, favorites, local playlists, and listening history in local app preferences. Listening history is used by the on-device recommendation algorithm and stats views. Navidrome credentials are stored using Android Keystore-backed AES-GCM on Android, the Secret Service keyring on Linux, and Windows DPAPI on Windows. Linux desktop builds require a working Secret Service keyring and `secret-tool`; credential saving fails closed if it is unavailable. On iOS and macOS, credentials remain in plain-text app preferences, and the app displays this warning: `WARNING: Your Navidrome credentials are stored in plain text because of.... well.... Apple!.` Keep your device account protected and only connect to servers you trust.
+Nava stores ordinary app preferences, favorites, local playlists, and listening history in local app preferences. Listening history is used by the on-device recommendation algorithm and stats views. Navidrome credentials are stored using Android Keystore-backed AES-GCM on Android, the Secret Service keyring on Linux, and Windows DPAPI on Windows. Linux desktop builds require a working Secret Service keyring and `secret-tool`; credential saving fails closed if it is unavailable. On iOS and macOS, credentials remain in plain-text app preferences, and the app displays this warning: `WARNING: Your Navidrome credentials are stored in plain text because of.... well.... Apple!.` Keep your device account protected and only connect to servers you trust.
 
 Recommendations are algorithmic and local; the current project does not require a cloud AI provider. Music files and streaming are served by your Navidrome server.
 

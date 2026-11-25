@@ -1,6 +1,6 @@
-# AGENTS.md — Navika
+# AGENTS.md — Nava
 
-Navika is a Flutter music player. It streams from a Navidrome server and plays local files, built on `just_audio` and `just_audio_background`. Targets: Android, iOS, macOS, Windows, Linux. It includes a "Flow" feature that builds a listening queue from history, favorites, and taste feedback.
+Nava is a Flutter music player. It streams from a Navidrome server and plays local files, built on `just_audio` and `just_audio_background`. Targets: Android, iOS, macOS, Windows, Linux. It includes a "Flow" feature that builds a listening queue from history, favorites, and taste feedback.
 
 Primary goal right now: **performance** on low-end Android phones and 8 GB Macs. Behavior and visual design must not change unless a task says so.
 
@@ -30,8 +30,8 @@ Never claim a performance improvement without profile-mode evidence (see "Perfor
 2. **Don't change behavior or UI.** Same layout, fonts, colors, animations, and user-visible strings unless the task explicitly says otherwise.
 3. **Keep the `part` / `extension` structure** unless the task is specifically to refactor it. Don't convert parts to libraries or move methods between files on your own.
 4. **No new packages** without asking first. Explain why and what it costs in app size.
-5. **Don't touch persistence formats.** SharedPreferences keys (`navika.*`) and their JSON shapes must stay backward compatible. If a format must change, write a migration and say so.
-6. **Platform code.** Don't edit `android/`, `ios/`, `macos/`, `windows/`, `linux/` or the `app.navika/local_folders` method channel unless the task requires it.
+5. **Don't touch persistence formats.** SharedPreferences keys (`nava.*`) and their JSON shapes must stay backward compatible. If a format must change, write a migration and say so.
+6. **Platform code.** Don't edit `android/`, `ios/`, `macos/`, `windows/`, `linux/` or the `app.nava/local_folders` method channel unless the task requires it.
 7. **Small steps.** One task at a time. After each change, run `flutter analyze` and report the result. Show a summary of the diff and the files changed.
 8. **If you are unsure or need a file you can't see, say which one.** Don't invent APIs, methods, or file contents.
 9. **Never leave `...`, `TODO`, or placeholder code** in the changes you deliver.

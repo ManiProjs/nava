@@ -27,7 +27,7 @@ class MainFlutterWindow: NSWindow {
 
     super.awakeFromNib()
 
-    // Keep the native traffic lights aligned with Navika's taller custom
+    // Keep the native traffic lights aligned with Nava's taller custom
     // title bar while preserving their standard horizontal spacing.
     for buttonType in [NSWindow.ButtonType.closeButton, .miniaturizeButton, .zoomButton] {
       guard let button = standardWindowButton(buttonType) else { continue }

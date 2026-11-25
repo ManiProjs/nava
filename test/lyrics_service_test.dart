@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:navika/lyrics_service.dart';
+import 'package:nava/lyrics_service.dart';
 
 void main() {
   group('parseLrc', () {

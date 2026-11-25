@@ -1,4 +1,4 @@
-package com.maniarasteh.navika
+package com.maniarasteh.nava
 
 import android.app.Activity
 import android.content.Intent
@@ -21,11 +21,11 @@ import com.ryanheise.audioservice.AudioServiceActivity
 import java.util.concurrent.Executors
 
 class MainActivity : AudioServiceActivity() {
-    private val channelName = "app.navika/local_folders"
-    private val credentialsChannelName = "app.navika/secure_credentials"
-    private val credentialsKeyAlias = "app.navika.credentials.v1"
+    private val channelName = "app.nava/local_folders"
+    private val credentialsChannelName = "app.nava/secure_credentials"
+    private val credentialsKeyAlias = "app.nava.credentials.v1"
     private val credentialsPrefs by lazy {
-        getSharedPreferences("navika_secure_credentials", MODE_PRIVATE)
+        getSharedPreferences("nava_secure_credentials", MODE_PRIVATE)
     }
     private val pickFolderRequest = 4817
     private var pendingFolderResult: MethodChannel.Result? = null

@@ -1,8 +1,8 @@
 import 'package:audio_service/audio_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:just_audio/just_audio.dart';
-import 'package:navika/navidrome_client.dart';
-import 'package:navika/navika_audio_handler.dart';
+import 'package:nava/navidrome_client.dart';
+import 'package:nava/nava_audio_handler.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -12,12 +12,12 @@ void main() {
     () async {
       final player = AudioPlayer();
       final selectedTracks = <String>[];
-      final handler = NavikaAudioHandler(player, (id) async {
+      final handler = NavaAudioHandler(player, (id) async {
         selectedTracks.add(id);
       }, (_) async {});
       final browseUpdates = <Map<String, dynamic>>[];
       final browseSubscription = handler
-          .subscribeToChildren('navika:favorites')
+          .subscribeToChildren('nava:favorites')
           .listen(browseUpdates.add);
       const track = MusicTrack(
         id: 'track-1',
@@ -62,17 +62,17 @@ void main() {
           'Playlists',
         ]);
 
-        final favorites = await handler.getChildren('navika:favorites');
+        final favorites = await handler.getChildren('nava:favorites');
         expect(favorites.single.id, track.id);
 
-        final playlistFolders = await handler.getChildren('navika:playlists');
+        final playlistFolders = await handler.getChildren('nava:playlists');
         expect(playlistFolders.map((item) => item.title), [
           'Smart playlists',
           'Road mix',
         ]);
 
         final smartFolders = await handler.getChildren(
-          'navika:smart-playlists',
+          'nava:smart-playlists',
         );
         final smartTracks = await handler.getChildren(smartFolders.single.id);
         expect(smartTracks.single.id, track.id);

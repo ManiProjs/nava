@@ -16,7 +16,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'navidrome_client.dart';
-import 'navika_audio_handler.dart';
+import 'nava_audio_handler.dart';
 import 'lyrics_service.dart';
 
 part 'src/app_widgets.dart';
@@ -37,7 +37,7 @@ part 'src/lyrics.dart';
 Future<void> _audioServiceReady = Future<void>.value();
 bool _audioServiceInitializationRequired = false;
 final AudioPlayer _sharedPlayer = AudioPlayer();
-NavikaAudioHandler? _audioHandler;
+NavaAudioHandler? _audioHandler;
 Future<void> Function(String trackId)? _audioSelectTrack;
 Future<void> Function(int direction)? _audioSkipTrack;
 
@@ -61,15 +61,15 @@ void main() {
       defaultTargetPlatform == TargetPlatform.iOS) {
     _audioServiceInitializationRequired = true;
     _audioServiceReady =
-        AudioService.init<NavikaAudioHandler>(
-              builder: () => NavikaAudioHandler(
+        AudioService.init<NavaAudioHandler>(
+              builder: () => NavaAudioHandler(
                 _sharedPlayer,
                 (id) async => _audioSelectTrack?.call(id),
                 (direction) async => _audioSkipTrack?.call(direction),
               ),
               config: AudioServiceConfig(
-                androidNotificationChannelId: 'app.navika.audio',
-                androidNotificationChannelName: 'Navika playback',
+                androidNotificationChannelId: 'app.nava.audio',
+                androidNotificationChannelName: 'Nava playback',
                 androidNotificationOngoing: true,
                 androidStopForegroundOnPause: false,
                 androidBrowsableRootExtras: const {
@@ -85,22 +85,22 @@ void main() {
               _audioHandler = handler;
             })
             .catchError((Object error, StackTrace stackTrace) {
-              debugPrint('Navika audio service initialization failed: $error');
+              debugPrint('Nava audio service initialization failed: $error');
             });
   }
   // Render Flutter's first frame immediately instead of keeping Android's
   // launch screen up while audio_service initializes.
-  runApp(const NavikaApp());
+  runApp(const NavaApp());
 }
 
-enum NavikaTheme { dark, amoled, light }
+enum NavaTheme { dark, amoled, light }
 
-const _themeKey = 'navika.theme';
-final ValueNotifier<NavikaTheme> _themeMode = ValueNotifier(NavikaTheme.dark);
+const _themeKey = 'nava.theme';
+final ValueNotifier<NavaTheme> _themeMode = ValueNotifier(NavaTheme.dark);
 
 abstract final class C {
-  static bool get light => _themeMode.value == NavikaTheme.light;
-  static bool get amoled => _themeMode.value == NavikaTheme.amoled;
+  static bool get light => _themeMode.value == NavaTheme.light;
+  static bool get amoled => _themeMode.value == NavaTheme.amoled;
   static Color get bg => light
       ? const Color(0xFFF6F6F3)
       : (amoled ? const Color(0xFF000000) : const Color(0xFF100F0D));
@@ -124,39 +124,39 @@ abstract final class C {
       light ? const Color(0xFFB42318) : const Color(0xFFFF8585);
 }
 
-const _credentialsKey = 'navika.navidrome.credentials';
+const _credentialsKey = 'nava.navidrome.credentials';
 typedef CredentialReaderOverride = Future<String?> Function(
   SharedPreferences preferences,
 );
 const _secureCredentialsChannel = MethodChannel(
-  'app.navika/secure_credentials',
+  'app.nava/secure_credentials',
 );
-const _historyKey = 'navika.listening.history';
-const _favoritesKey = 'navika.favorites';
-const _motionKey = 'navika.reduce-motion';
-const _playlistsKey = 'navika.local.playlists';
-const _autoAdvanceKey = 'navika.playback.auto-advance';
-const _visualizerKey = 'navika.playback.visualizer';
-const _shuffleKey = 'navika.playback.shuffle';
-const _repeatAllKey = 'navika.playback.repeat-all';
-const _repeatOneKey = 'navika.playback.repeat-one';
-const _queueKey = 'navika.playback.queue';
-const _recommendationFeedbackKey = 'navika.recommendations.dismissed';
-const _tasteProfileKey = 'navika.taste-profile.v1';
-const _flowHiddenTracksKey = 'navika.flow.hidden-tracks.v1';
-const _flowPreferencesKey = 'navika.flow.preferences.v1';
-const _flowArtistFeedbackKey = 'navika.flow.artist-feedback.v1';
-const _flowExcludedTracksKey = 'navika.flow.excluded-tracks.v1';
-const _flowProtectedTracksKey = 'navika.flow.protected-tracks.v1';
-const _flowSessionKey = 'navika.flow.session.v1';
-const _librarySourceKey = 'navika.library-source.v1';
-const _speedKey = 'navika.playback.speed';
-const _replayGainEnabledKey = 'navika.playback.replay-gain.enabled';
-const _replayGainAlbumKey = 'navika.playback.replay-gain.album-mode';
-const _replayGainPreampKey = 'navika.playback.replay-gain.preamp';
-const _localTracksKey = 'navika.local.tracks';
-const _localFoldersKey = 'navika.local.folders';
-const _androidLocalFolders = MethodChannel('app.navika/local_folders');
+const _historyKey = 'nava.listening.history';
+const _favoritesKey = 'nava.favorites';
+const _motionKey = 'nava.reduce-motion';
+const _playlistsKey = 'nava.local.playlists';
+const _autoAdvanceKey = 'nava.playback.auto-advance';
+const _visualizerKey = 'nava.playback.visualizer';
+const _shuffleKey = 'nava.playback.shuffle';
+const _repeatAllKey = 'nava.playback.repeat-all';
+const _repeatOneKey = 'nava.playback.repeat-one';
+const _queueKey = 'nava.playback.queue';
+const _recommendationFeedbackKey = 'nava.recommendations.dismissed';
+const _tasteProfileKey = 'nava.taste-profile.v1';
+const _flowHiddenTracksKey = 'nava.flow.hidden-tracks.v1';
+const _flowPreferencesKey = 'nava.flow.preferences.v1';
+const _flowArtistFeedbackKey = 'nava.flow.artist-feedback.v1';
+const _flowExcludedTracksKey = 'nava.flow.excluded-tracks.v1';
+const _flowProtectedTracksKey = 'nava.flow.protected-tracks.v1';
+const _flowSessionKey = 'nava.flow.session.v1';
+const _librarySourceKey = 'nava.library-source.v1';
+const _speedKey = 'nava.playback.speed';
+const _replayGainEnabledKey = 'nava.playback.replay-gain.enabled';
+const _replayGainAlbumKey = 'nava.playback.replay-gain.album-mode';
+const _replayGainPreampKey = 'nava.playback.replay-gain.preamp';
+const _localTracksKey = 'nava.local.tracks';
+const _localFoldersKey = 'nava.local.folders';
+const _androidLocalFolders = MethodChannel('app.nava/local_folders');
 Map<String, Object?> _readEmbeddedMetadata(String path) {
   double? trackGainDb;
   double? albumGainDb;

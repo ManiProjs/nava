@@ -8,8 +8,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:navika/main.dart';
-import 'package:navika/navidrome_client.dart';
+import 'package:nava/main.dart';
+import 'package:nava/navidrome_client.dart';
 
 void main() {
   test('local track metadata survives persistence serialization', () {
@@ -36,12 +36,12 @@ void main() {
     expect(restored.album, 'Embedded Album');
   });
 
-  testWidgets('Navika app starts and shows its main navigation', (
+  testWidgets('Nava app starts and shows its main navigation', (
     WidgetTester tester,
   ) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(
-      NavikaApp(credentialReaderOverride: (_) async => null),
+      NavaApp(credentialReaderOverride: (_) async => null),
     );
     await tester.pump();
 
@@ -55,7 +55,7 @@ void main() {
   ) async {
     SharedPreferences.setMockInitialValues({});
     await tester.pumpWidget(
-      NavikaApp(credentialReaderOverride: (_) async => null),
+      NavaApp(credentialReaderOverride: (_) async => null),
     );
     await tester.pump();
 

@@ -86,7 +86,7 @@ extension _SettingsMethods on _HomeScreenState {
                                         ),
                                         SizedBox(height: 4),
                                         Text(
-                                          'Make Navika feel right.',
+                                          'Make Nava feel right.',
                                           style: TextStyle(
                                             color: C.muted,
                                             fontSize: 11,
@@ -119,30 +119,30 @@ extension _SettingsMethods on _HomeScreenState {
                                 ),
                                 subtitle: Text(
                                   switch (_themeMode.value) {
-                                    NavikaTheme.dark => 'Dark',
-                                    NavikaTheme.amoled => 'AMOLED black',
-                                    NavikaTheme.light => 'Light',
+                                    NavaTheme.dark => 'Dark',
+                                    NavaTheme.amoled => 'AMOLED black',
+                                    NavaTheme.light => 'Light',
                                   },
                                   style: TextStyle(
                                     color: C.muted,
                                     fontSize: 10,
                                   ),
                                 ),
-                                trailing: DropdownButton<NavikaTheme>(
+                                trailing: DropdownButton<NavaTheme>(
                                   value: _themeMode.value,
                                   underline: SizedBox.shrink(),
                                   borderRadius: BorderRadius.circular(12),
                                   items: [
                                     DropdownMenuItem(
-                                      value: NavikaTheme.dark,
+                                      value: NavaTheme.dark,
                                       child: Text('Dark'),
                                     ),
                                     DropdownMenuItem(
-                                      value: NavikaTheme.amoled,
+                                      value: NavaTheme.amoled,
                                       child: Text('AMOLED'),
                                     ),
                                     DropdownMenuItem(
-                                      value: NavikaTheme.light,
+                                      value: NavaTheme.light,
                                       child: Text('Light'),
                                     ),
                                   ],
@@ -535,7 +535,7 @@ extension _SettingsMethods on _HomeScreenState {
                               Padding(
                                 padding: EdgeInsets.only(bottom: 8),
                                 child: Text(
-                                  'Navika learns from listening history, favorites, and your track and artist feedback. Flow preferences stay on this device.',
+                                  'Nava learns from listening history, favorites, and your track and artist feedback. Flow preferences stay on this device.',
                                   style: TextStyle(
                                     color: C.muted,
                                     fontSize: 10,
@@ -718,7 +718,7 @@ extension _SettingsMethods on _HomeScreenState {
                                 ),
                               SizedBox(height: 12),
                               Text(
-                                'Navika · Your listening history stays on this device.',
+                                'Nava · Your listening history stays on this device.',
                                 style: TextStyle(
                                   color: C.muted,
                                   fontSize: 10,

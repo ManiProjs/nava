@@ -1,26 +1,26 @@
 part of '../main.dart';
 
-class NavikaApp extends StatelessWidget {
-  const NavikaApp({super.key, this.credentialReaderOverride});
+class NavaApp extends StatelessWidget {
+  const NavaApp({super.key, this.credentialReaderOverride});
 
   final CredentialReaderOverride? credentialReaderOverride;
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<NavikaTheme>(
+    return ValueListenableBuilder<NavaTheme>(
       valueListenable: _themeMode,
       builder: (context, mode, _) => MaterialApp(
-        title: 'Navika',
+        title: 'Nava',
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          brightness: mode == NavikaTheme.light
+          brightness: mode == NavaTheme.light
               ? Brightness.light
               : Brightness.dark,
           scaffoldBackgroundColor: C.bg,
           canvasColor: C.bg,
           fontFamily: 'DMSans',
           colorScheme: ColorScheme(
-            brightness: mode == NavikaTheme.light
+            brightness: mode == NavaTheme.light
                 ? Brightness.light
                 : Brightness.dark,
             primary: C.lime,
@@ -140,7 +140,7 @@ class _StartupGate extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  'navika',
+                  'nava',
                   style: TextStyle(
                     fontFamily: 'SyneBold',
                     fontSize: 38,

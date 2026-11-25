@@ -1,6 +1,6 @@
 part of '../main.dart';
 
-const _lyricsCachePrefix = 'navika.lyrics.cache.v1.';
+const _lyricsCachePrefix = 'nava.lyrics.cache.v1.';
 
 extension _LyricsMethods on _HomeScreenState {
   Future<void> _loadLyrics(MusicTrack track, {bool refresh = false}) async {

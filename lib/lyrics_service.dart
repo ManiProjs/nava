@@ -89,7 +89,7 @@ class LrclibClient {
 
   final http.Client _client;
   static const _userAgent =
-      'Navika/0.1.2 (https://github.com/ManiProjs/navika)';
+      'Nava/0.1.2 (https://github.com/ManiProjs/nava)';
 
   Future<TrackLyrics?> fetch(MusicTrack track) async {
     if (track.title.trim().isEmpty || track.artist.trim().isEmpty) return null;

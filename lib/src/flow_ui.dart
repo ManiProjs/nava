@@ -65,7 +65,7 @@ extension _FlowUiMethods on _HomeScreenState {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'navika flow',
+                            'nava flow',
                             style: TextStyle(
                               fontFamily: 'SyneBold',
                               fontSize: 23,
@@ -707,7 +707,7 @@ extension _FlowUiMethods on _HomeScreenState {
                                     ? (_current == null
                                           ? 'Resume previous Flow session'
                                           : 'Refresh upcoming tracks')
-                                    : 'Start Navika Flow',
+                                    : 'Start Nava Flow',
                               ),
                               style: FilledButton.styleFrom(
                                 backgroundColor: accent,
@@ -804,7 +804,7 @@ extension _FlowUiMethods on _HomeScreenState {
                 child: Row(
                   children: [
                     IconButton(
-                      tooltip: 'Close Navika Flow',
+                      tooltip: 'Close Nava Flow',
                       onPressed: () => _updateState(() => _showFlow = false),
                       icon: Icon(Icons.close_rounded),
                     ),
@@ -828,7 +828,7 @@ extension _FlowUiMethods on _HomeScreenState {
                     ),
                     SizedBox(width: 10),
                     Text(
-                      'navika flow',
+                      'nava flow',
                       style: TextStyle(
                         fontFamily: 'SyneBold',
                         fontSize: 23,
@@ -879,7 +879,7 @@ extension _FlowUiMethods on _HomeScreenState {
                           ),
                           SizedBox(height: 14),
                           Text(
-                            'Navika Flow builds a listening queue from your library, history, and favorites. Shape the balance between familiar tracks and new discoveries, then let the music run.',
+                            'Nava Flow builds a listening queue from your library, history, and favorites. Shape the balance between familiar tracks and new discoveries, then let the music run.',
                             style: TextStyle(
                               color: C.muted,
                               fontSize: 13,

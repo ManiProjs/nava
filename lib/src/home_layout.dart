@@ -31,7 +31,7 @@ extension _HomeLayoutMethods on _HomeScreenState {
           ),
           SizedBox(width: 10),
           Text(
-            'navika',
+            'nava',
             style: TextStyle(
               fontFamily: 'SyneBold',
               fontSize: 23,
@@ -315,7 +315,7 @@ extension _HomeLayoutMethods on _HomeScreenState {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Navika Flow',
+                      'Nava Flow',
                       style: TextStyle(fontFamily: 'DMSansBold', fontSize: 15),
                     ),
                     SizedBox(height: 4),
@@ -366,7 +366,7 @@ extension _HomeLayoutMethods on _HomeScreenState {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _artwork(null, size: 90, seed: 'Navika'),
+                _artwork(null, size: 90, seed: 'Nava'),
                 SizedBox(height: 18),
                 Text(
                   'Your music lives here.',

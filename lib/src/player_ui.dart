@@ -90,7 +90,7 @@ extension _PlayerUiMethods on _HomeScreenState {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          _flowActive ? 'NAVIKA FLOW' : 'NOW PLAYING',
+                          _flowActive ? 'NAVA FLOW' : 'NOW PLAYING',
                           style: TextStyle(
                             color: _artworkAccentColor ?? C.lime,
                             fontFamily: 'DMSansBold',

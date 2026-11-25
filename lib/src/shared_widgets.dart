@@ -20,7 +20,7 @@ extension _SharedWidgetMethods on _HomeScreenState {
 
   List<Color> _playerAmbientColors() {
     // Sample the current cover for a restrained ambient tint. Missing or
-    // unreadable artwork falls back to Navika's signature lime.
+    // unreadable artwork falls back to Nava's signature lime.
     final accent = _artworkAccentColor ?? C.lime;
     return [Color.lerp(accent, C.bg, C.light ? .78 : .82)!, C.bg];
   }

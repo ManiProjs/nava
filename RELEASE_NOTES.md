@@ -1,6 +1,6 @@
-# Navika v0.2.0
+# Nava v0.2.0
 
-This release brings Navika to the car, adds synchronized lyrics and smart playlists, and improves playback personalization and loudness handling.
+This release brings Nava to the car, adds synchronized lyrics and smart playlists, and improves playback personalization and loudness handling.
 
 ## What's new
 
@@ -13,12 +13,12 @@ This release brings Navika to the car, adds synchronized lyrics and smart playli
 
 - **Flow** — more consistent artist variety, session-aware queue generation, track exclusions and the ability to resume a Flow session.
 - **Player experience** — clearer tactile playback controls, plus lyrics and Up Next panels that switch in the same player area.
-- **App identity** — platform application identifiers now use `com.maniarasteh.navika`.
+- **App identity** — platform application identifiers now use `com.maniarasteh.nava`.
 - **Playback integration** — more complete media metadata and controls for Android's media experience.
 
 ## Upgrade notes
 
-- Android treats the new application ID as a different app from earlier builds using `com.example.navika`. The previous installation may remain separately installed; transfer or back up any local-only data before removing it.
+- Android treats the new application ID as a different app from earlier builds using `com.example.nava`. The previous installation may remain separately installed; transfer or back up any local-only data before removing it.
 - ReplayGain only changes tracks that include usable gain metadata. It does not analyze audio or create ReplayGain tags.
 
 ---

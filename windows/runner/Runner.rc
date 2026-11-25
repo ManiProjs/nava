@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "Navika" "\0"
+            VALUE "FileDescription", "Nava" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "Navika" "\0"
+            VALUE "InternalName", "Nava" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "Navika.exe" "\0"
-            VALUE "ProductName", "Navika" "\0"
+            VALUE "OriginalFilename", "Nava.exe" "\0"
+            VALUE "ProductName", "Nava" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

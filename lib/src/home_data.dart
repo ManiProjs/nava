@@ -7,7 +7,7 @@ extension _HomeDataMethods on _HomeScreenState {
 
     if (normalized.contains('cleartext') ||
         normalized.contains('clear text traffic')) {
-      return 'Android blocked the HTTP audio stream. Rebuild and reinstall Navika with the latest version, then try again.';
+      return 'Android blocked the HTTP audio stream. Rebuild and reinstall Nava with the latest version, then try again.';
     }
     if (normalized.contains('socketexception') ||
         normalized.contains('failed host lookup') ||
@@ -30,7 +30,7 @@ extension _HomeDataMethods on _HomeScreenState {
     if (normalized.contains('format') ||
         normalized.contains('decoder') ||
         normalized.contains('unsupported')) {
-      return 'Navika could not decode this audio format. Try another track or check the file on your server.';
+      return 'Nava could not decode this audio format. Try another track or check the file on your server.';
     }
 
     return 'Playback failed: $details';
@@ -423,9 +423,9 @@ extension _HomeDataMethods on _HomeScreenState {
 
     _reduceMotion = preferences.getBool(_motionKey) ?? false;
     final savedTheme = preferences.getString(_themeKey);
-    _themeMode.value = NavikaTheme.values.firstWhere(
+    _themeMode.value = NavaTheme.values.firstWhere(
       (theme) => theme.name == savedTheme,
-      orElse: () => NavikaTheme.dark,
+      orElse: () => NavaTheme.dark,
     );
     _autoAdvance = preferences.getBool(_autoAdvanceKey) ?? true;
     _showLocalLibrary = preferences.getBool(_librarySourceKey) ?? false;
@@ -838,7 +838,7 @@ extension _HomeDataMethods on _HomeScreenState {
     final process = await Process.start('secret-tool', [
       'lookup',
       'app',
-      'navika',
+      'nava',
       'kind',
       'credentials',
     ]);
@@ -855,9 +855,9 @@ extension _HomeDataMethods on _HomeScreenState {
   Future<void> _linuxKeyringWrite(String value) async {
     final process = await Process.start('secret-tool', [
       'store',
-      '--label=Navika Navidrome credentials',
+      '--label=Nava Navidrome credentials',
       'app',
-      'navika',
+      'nava',
       'kind',
       'credentials',
     ]);
@@ -877,7 +877,7 @@ extension _HomeDataMethods on _HomeScreenState {
     final process = await Process.start('secret-tool', [
       'clear',
       'app',
-      'navika',
+      'nava',
       'kind',
       'credentials',
     ]);
@@ -1046,7 +1046,7 @@ finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
     // their indexed entries, then repopulate from any remaining watched folders.
     final localTracks = _localTracks
         .where(
-          (track) => !(track.localPath ?? '').contains('/navika_imported/'),
+          (track) => !(track.localPath ?? '').contains('/nava_imported/'),
         )
         .toList();
     final merged = _mergeLibraryTracks([
@@ -1286,7 +1286,7 @@ finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
         // cached tracks alongside the original files.
         if (Platform.isAndroid &&
             inaccessibleFolders.isEmpty &&
-            path.contains('/navika_imported/')) {
+            path.contains('/nava_imported/')) {
           return false;
         }
         final parentFolder = _localFolders.where(
@@ -1331,7 +1331,7 @@ finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
         // Remove legacy copies after the library has been migrated to content
         // URIs. Keep the currently playing file until playback moves away.
         final legacyDirectory = Directory(
-          '${(await getApplicationSupportDirectory()).path}/navika_imported',
+          '${(await getApplicationSupportDirectory()).path}/nava_imported',
         );
         if (await legacyDirectory.exists()) {
           final activePath = _current?.localPath;
@@ -1350,7 +1350,7 @@ finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
         final message = folderErrors.isNotEmpty
             ? 'Could not read ${folderErrors.length} folder(s): ${folderErrors.entries.map((entry) => '${entry.key}: ${entry.value}').join('; ')}'
             : discovered.isEmpty
-            ? 'No supported audio files found. Navika checks MP3, M4A, AAC, WAV, FLAC, OGG, OPUS, AIFF, ALAC, WMA, MIDI and other common formats.'
+            ? 'No supported audio files found. Nava checks MP3, M4A, AAC, WAV, FLAC, OGG, OPUS, AIFF, ALAC, WMA, MIDI and other common formats.'
             : 'Folder added. Found ${discovered.length} audio file(s); folders rescan when the app resumes or you tap refresh.';
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(message)));

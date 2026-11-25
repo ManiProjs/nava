@@ -213,7 +213,7 @@ class ListeningEvent {
 }
 
 /// Builds a personalized Flow batch using only metadata and listening signals
-/// Navika actually has. A seed can be supplied by tests for reproducibility.
+/// Nava actually has. A seed can be supplied by tests for reproducibility.
 List<MusicTrack> buildFlowQueue({
   required List<MusicTrack> tracks,
   required List<ListeningEvent> history,
@@ -447,7 +447,7 @@ class NavidromeClient {
       't': token,
       's': salt,
       'v': '1.16.1',
-      'c': 'Navika',
+      'c': 'Nava',
       'f': 'json',
     };
   }

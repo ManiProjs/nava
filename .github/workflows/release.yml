@@ -1,4 +1,4 @@
-name: Build and release Navika
+name: Build and release Nava
 
 on:
   push:
@@ -10,7 +10,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: navika-release-${{ github.ref }}
+  group: nava-release-${{ github.ref }}
   cancel-in-progress: false
 
 jobs:
@@ -65,13 +65,13 @@ jobs:
         shell: pwsh
         run: |
           $version = $env:GITHUB_REF_NAME -replace '^v', ''
-          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath "Navika-$version-windows-x64.zip"
+          Compress-Archive -Path build/windows/x64/runner/Release/* -DestinationPath "Nava-$version-windows-x64.zip"
 
       - name: Upload Windows artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Navika-windows-x64
-          path: Navika-*-windows-x64.zip
+          name: Nava-windows-x64
+          path: Nava-*-windows-x64.zip
           if-no-files-found: error
 
   build-macos:
@@ -98,13 +98,13 @@ jobs:
           flutter build macos --release --build-name="$version"
 
       - name: Package macOS app
-        run: ditto -c -k --sequesterRsrc --keepParent build/macos/Build/Products/Release/navika.app "Navika-${GITHUB_REF_NAME#v}-macos-arm64.zip"
+        run: ditto -c -k --sequesterRsrc --keepParent build/macos/Build/Products/Release/nava.app "Nava-${GITHUB_REF_NAME#v}-macos-arm64.zip"
 
       - name: Upload macOS artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Navika-macos-arm64
-          path: Navika-*-macos-arm64.zip
+          name: Nava-macos-arm64
+          path: Nava-*-macos-arm64.zip
           if-no-files-found: error
 
   build-linux:
@@ -137,13 +137,13 @@ jobs:
           flutter build linux --release --build-name="$version"
 
       - name: Package Linux bundle
-        run: tar -C build/linux/x64/release -czf "Navika-${GITHUB_REF_NAME#v}-linux-x64.tar.gz" bundle
+        run: tar -C build/linux/x64/release -czf "Nava-${GITHUB_REF_NAME#v}-linux-x64.tar.gz" bundle
 
       - name: Upload Linux artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Navika-linux-x64
-          path: Navika-*-linux-x64.tar.gz
+          name: Nava-linux-x64
+          path: Nava-*-linux-x64.tar.gz
           if-no-files-found: error
 
   build-android:
@@ -177,7 +177,7 @@ jobs:
             echo "Missing ANDROID_KEYSTORE_BASE64 repository secret." >&2
             exit 1
           fi
-          keystore_path="$RUNNER_TEMP/navika-upload-key.jks"
+          keystore_path="$RUNNER_TEMP/nava-upload-key.jks"
           printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > "$keystore_path"
           echo "ANDROID_KEYSTORE_PATH=$keystore_path" >> "$GITHUB_ENV"
 
@@ -208,13 +208,13 @@ jobs:
 
       - name: Name Android artifact
         shell: bash
-        run: cp build/app/outputs/flutter-apk/app-release.apk "Navika-${GITHUB_REF_NAME#v}-android.apk"
+        run: cp build/app/outputs/flutter-apk/app-release.apk "Nava-${GITHUB_REF_NAME#v}-android.apk"
 
       - name: Upload Android artifact
         uses: actions/upload-artifact@v4
         with:
-          name: Navika-android
-          path: Navika-*-android.apk
+          name: Nava-android
+          path: Nava-*-android.apk
           if-no-files-found: error
 
   publish-release:
@@ -240,13 +240,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           path: dist
-          pattern: Navika-*
+          pattern: Nava-*
           merge-multiple: true
 
       - name: Publish release with repository notes
         uses: softprops/action-gh-release@v2
         with:
-          name: Navika ${{ github.ref_name }}
+          name: Nava ${{ github.ref_name }}
           body_path: ${{ runner.temp }}/RELEASE_NOTES.md
           generate_release_notes: false
           prerelease: ${{ contains(github.ref_name, '-') }}

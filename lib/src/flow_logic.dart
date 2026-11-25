@@ -131,7 +131,7 @@ extension _FlowLogicMethods on _HomeScreenState {
     if (picks.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Add more available songs to start Navika Flow.'),
+          content: Text('Add more available songs to start Nava Flow.'),
         ),
       );
       return;
@@ -434,8 +434,8 @@ extension _FlowLogicMethods on _HomeScreenState {
           value >= 2
               ? 'Saved — Flow will strongly favor this track.'
               : value > 0
-              ? 'Got it — Navika will look for more like this.'
-              : 'Got it — Navika will recommend less like this.',
+              ? 'Got it — Nava will look for more like this.'
+              : 'Got it — Nava will recommend less like this.',
         ),
       ),
     );
