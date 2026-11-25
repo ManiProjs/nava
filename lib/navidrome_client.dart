@@ -44,6 +44,7 @@ class MusicTrack {
     this.localArtworkPath,
     this.localMetadataRead = false,
     this.localModifiedMillis,
+    this.suffix,
     this.trackGainDb,
     this.albumGainDb,
     this.trackPeak,
@@ -62,6 +63,7 @@ class MusicTrack {
   final String? localArtworkPath;
   final bool localMetadataRead;
   final int? localModifiedMillis;
+  final String? suffix;
   final double? trackGainDb;
   final double? albumGainDb;
   final double? trackPeak;
@@ -88,6 +90,7 @@ class MusicTrack {
       localArtworkPath: json['localArtworkPath'] as String?,
       localMetadataRead: json['localMetadataRead'] as bool? ?? false,
       localModifiedMillis: (json['localModifiedMillis'] as num?)?.toInt(),
+      suffix: json['suffix'] as String?,
       trackGainDb:
           replayGain['trackGainDb'] ?? _replayGainNumber(json['trackGainDb']),
       albumGainDb:
@@ -112,6 +115,7 @@ class MusicTrack {
     localArtworkPath: localArtworkPath,
     localMetadataRead: localMetadataRead,
     localModifiedMillis: localModifiedMillis,
+    suffix: suffix,
     trackGainDb: trackGainDb,
     albumGainDb: albumGainDb,
     trackPeak: trackPeak,
@@ -131,6 +135,7 @@ class MusicTrack {
     'localArtworkPath': localArtworkPath,
     'localMetadataRead': localMetadataRead,
     'localModifiedMillis': localModifiedMillis,
+    'suffix': suffix,
     'trackGainDb': trackGainDb,
     'albumGainDb': albumGainDb,
     'trackPeak': trackPeak,
@@ -423,6 +428,13 @@ List<MusicTrack> buildFlowQueue({
   return result;
 }
 
+class ServerPlaylist {
+  const ServerPlaylist({required this.id, required this.name, this.owner});
+  final String id;
+  final String name;
+  final String? owner;
+}
+
 class NavidromeClient {
   NavidromeClient(this.credentials)
     : baseUrl = credentials.baseUrl.trim().replaceFirst(RegExp(r'/+$'), '');
@@ -454,7 +466,7 @@ class NavidromeClient {
 
   Future<Map<String, dynamic>> _request(
     String endpoint, [
-    Map<String, String> params = const {},
+    Map<String, Object> params = const {},
   ]) async {
     final uri = Uri.parse('$baseUrl/rest/$endpoint.view')
         .replace(queryParameters: {..._authParams(), ...params});
@@ -481,6 +493,107 @@ class NavidromeClient {
   Future<void> connect() async {
     await _request('ping');
   }
+
+  /// Reports a play to the server. `submission: false` only updates the
+  /// "now playing" state; `true` records a finished listen at [time].
+  Future<void> scrobble(
+    String id, {
+    DateTime? time,
+    bool submission = true,
+  }) async {
+    await _request('scrobble', {
+      'id': id,
+      'submission': '$submission',
+      if (time != null) 'time': '${time.millisecondsSinceEpoch}',
+    });
+  }
+
+  Future<List<ServerPlaylist>> getServerPlaylists() async {
+    final result = await _request('getPlaylists');
+    final list = result['playlists'] as Map<String, dynamic>?;
+    return (list?['playlist'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map(
+          (item) => ServerPlaylist(
+            id: '${item['id']}',
+            name: '${item['name'] ?? ''}',
+            owner: item['owner'] as String?,
+          ),
+        )
+        .where((item) => item.id != 'null' && item.name.isNotEmpty)
+        .toList();
+  }
+
+  Future<List<String>> getServerPlaylistTrackIds(String playlistId) async {
+    final result = await _request('getPlaylist', {'id': playlistId});
+    final body = result['playlist'] as Map<String, dynamic>?;
+    return (body?['entry'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map((entry) => '${entry['id'] ?? ''}')
+        .where((id) => id.isNotEmpty)
+        .toList();
+  }
+
+  Future<String> createServerPlaylist(String name, List<String> ids) async {
+    final result = await _request('createPlaylist', {
+      'name': name,
+      if (ids.isNotEmpty) 'songId': ids,
+    });
+    final body = result['playlist'] as Map<String, dynamic>?;
+    final id = body?['id'];
+    if (id == null) throw Exception('Server did not return a playlist id');
+    return '$id';
+  }
+
+  /// Replaces the full contents of a playlist (Subsonic `createPlaylist`
+  /// with an existing `playlistId`).
+  Future<void> replaceServerPlaylist(String id, List<String> ids) async {
+    await _request('createPlaylist', {
+      'playlistId': id,
+      if (ids.isNotEmpty) 'songId': ids,
+    });
+    if (ids.isEmpty) {
+      // createPlaylist with no songs may be ignored; clear explicitly.
+      final current = await getServerPlaylistTrackIds(id);
+      if (current.isNotEmpty) {
+        await _request('updatePlaylist', {
+          'playlistId': id,
+          'songIndexToRemove': [for (var i = 0; i < current.length; i++) '$i'],
+        });
+      }
+    }
+  }
+
+  Future<void> deleteServerPlaylist(String id) async {
+    await _request('deletePlaylist', {'id': id});
+  }
+
+  Future<Set<String>> getStarredIds() async {
+    final result = await _request('getStarred2');
+    final body = result['starred2'] as Map<String, dynamic>?;
+    return (body?['song'] as List<dynamic>? ?? const [])
+        .whereType<Map<String, dynamic>>()
+        .map((entry) => '${entry['id'] ?? ''}')
+        .where((id) => id.isNotEmpty)
+        .toSet();
+  }
+
+  Future<void> star(Iterable<String> ids) async {
+    final list = ids.toList();
+    if (list.isEmpty) return;
+    await _request('star', {'id': list});
+  }
+
+  Future<void> unstar(Iterable<String> ids) async {
+    final list = ids.toList();
+    if (list.isEmpty) return;
+    await _request('unstar', {'id': list});
+  }
+
+  /// Original, untranscoded file for offline storage.
+  Uri downloadUri(String id) =>
+      Uri.parse('$baseUrl/rest/download.view')
+          .replace(queryParameters: {..._authParams(), 'id': id});
 
   Future<List<MusicTrack>> searchTracks(String query, {int limit = 100}) async {
     final normalized = query.trim();

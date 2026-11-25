@@ -71,9 +71,7 @@ void main() {
           'Road mix',
         ]);
 
-        final smartFolders = await handler.getChildren(
-          'nava:smart-playlists',
-        );
+        final smartFolders = await handler.getChildren('nava:smart-playlists');
         final smartTracks = await handler.getChildren(smartFolders.single.id);
         expect(smartTracks.single.id, track.id);
 

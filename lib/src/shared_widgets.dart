@@ -108,6 +108,10 @@ extension _SharedWidgetMethods on _HomeScreenState {
               ),
             ),
             SizedBox(width: 8),
+            if (_offline.statusOf(track.id) != DownloadStatus.none) ...[
+              _downloadBadge(track),
+              SizedBox(width: 8),
+            ],
             Text(
               _formatTime(track.duration.toDouble()),
               style: TextStyle(color: C.muted, fontSize: 10),

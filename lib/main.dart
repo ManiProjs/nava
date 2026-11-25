@@ -18,6 +18,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'navidrome_client.dart';
 import 'nava_audio_handler.dart';
 import 'lyrics_service.dart';
+import 'offline_store.dart';
+import 'scrobbler.dart';
+import 'server_sync.dart';
 
 part 'src/app_widgets.dart';
 part 'src/home_data.dart';
@@ -33,6 +36,7 @@ part 'src/flow_ui.dart';
 part 'src/player_ui.dart';
 part 'src/shared_widgets.dart';
 part 'src/lyrics.dart';
+part 'src/integrations.dart';
 
 Future<void> _audioServiceReady = Future<void>.value();
 bool _audioServiceInitializationRequired = false;
@@ -128,9 +132,7 @@ const _credentialsKey = 'nava.navidrome.credentials';
 typedef CredentialReaderOverride = Future<String?> Function(
   SharedPreferences preferences,
 );
-const _secureCredentialsChannel = MethodChannel(
-  'app.nava/secure_credentials',
-);
+const _secureCredentialsChannel = MethodChannel('app.nava/secure_credentials');
 const _historyKey = 'nava.listening.history';
 const _favoritesKey = 'nava.favorites';
 const _motionKey = 'nava.reduce-motion';
@@ -154,6 +156,11 @@ const _speedKey = 'nava.playback.speed';
 const _replayGainEnabledKey = 'nava.playback.replay-gain.enabled';
 const _replayGainAlbumKey = 'nava.playback.replay-gain.album-mode';
 const _replayGainPreampKey = 'nava.playback.replay-gain.preamp';
+const _syncEnabledKey = 'nava.sync.enabled';
+const _syncStateKey = 'nava.sync.state.v1';
+const _scrobbleEnabledKey = 'nava.scrobble.enabled';
+const _scrobbleQueueKey = 'nava.scrobble.pending.v1';
+const _offlineIndexKey = 'nava.offline.index.v1';
 const _localTracksKey = 'nava.local.tracks';
 const _localFoldersKey = 'nava.local.folders';
 const _androidLocalFolders = MethodChannel('app.nava/local_folders');
@@ -321,6 +328,22 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   Timer? _searchTimer;
   Timer? _sleepTimer;
   Timer? _historySaveTimer;
+  Timer? _syncTimer;
+  late final OfflineStore _offline = OfflineStore(
+    directoryProvider: () async {
+      final base = await getApplicationSupportDirectory();
+      return Directory('${base.path}${Platform.pathSeparator}downloads');
+    },
+    persist: _saveOfflineIndex,
+  );
+  final ScrobbleTracker _scrobbleTracker = ScrobbleTracker();
+  ScrobbleQueue _scrobbleQueue = ScrobbleQueue();
+  SyncState _syncState = const SyncState();
+  bool _syncEnabled = true;
+  bool _scrobbleEnabled = true;
+  bool _syncing = false;
+  bool _offlineMode = false;
+  String _syncStatus = '';
   Timer? _settingsUnmountTimer;
   Timer? _playerUnmountTimer;
   Timer? _flowUnmountTimer;
@@ -516,6 +539,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     PaintingBinding.instance.imageCache
       ..maximumSize = 300
       ..maximumSizeBytes = 64 << 20;
+    _offline.addListener(_onOfflineChanged);
     _restore();
     _audioSelectTrack = (trackId) async {
       final track =
@@ -551,6 +575,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             // page-level setState so a progress update doesn't rebuild the entire
             // library, settings, artwork shelves, and navigation on older phones.
             if (!_seeking) _position.value = position;
+            _scrobbleTick(position);
           }),
     );
     _playerSubscriptions.add(
@@ -580,6 +605,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     _searchTimer?.cancel();
     _sleepTimer?.cancel();
     _historySaveTimer?.cancel();
+    _syncTimer?.cancel();
+    _offline.removeListener(_onOfflineChanged);
+    _offline.dispose();
     _settingsUnmountTimer?.cancel();
     _playerUnmountTimer?.cancel();
     _flowUnmountTimer?.cancel();
@@ -610,6 +638,14 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     if (state == AppLifecycleState.resumed && _localFolders.isNotEmpty) {
       unawaited(_scanLocalFolders());
     }
+    if (state == AppLifecycleState.resumed && _offlineMode) {
+      // Back from a stretch offline: try the server again.
+      unawaited(_loadLibrary(force: true));
+    }
+  }
+
+  void _onOfflineChanged() {
+    if (mounted) setState(() {});
   }
 
   @override
@@ -621,7 +657,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         platform == TargetPlatform.linux;
     final isMacOS = platform == TargetPlatform.macOS;
 
-    return PopScope(
+    final app = PopScope(
       canPop: !_shouldHandleSystemBack,
       onPopInvokedWithResult: (didPop, result) {
         if (!didPop) _handleSystemBack();
@@ -736,6 +772,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       ),
     );
+    if (!isDesktop) return app;
+    return Focus(autofocus: true, onKeyEvent: _handleDesktopKey, child: app);
   }
 }
 

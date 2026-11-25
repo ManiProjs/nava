@@ -12,8 +12,7 @@ typedef AudioTrackSkipper = Future<void> Function(int direction);
 
 /// Bridges Nava's existing player and library to Android Auto and system
 /// media controls. The Flutter UI remains the owner of queue policy.
-class NavaAudioHandler extends BaseAudioHandler
-    with QueueHandler, SeekHandler {
+class NavaAudioHandler extends BaseAudioHandler with QueueHandler, SeekHandler {
   NavaAudioHandler(this._player, this._onSelectTrack, this._onSkip) {
     _subscriptions.add(
       _player.playbackEventStream.listen((_) => _broadcastState()),

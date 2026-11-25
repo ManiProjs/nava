@@ -18,7 +18,8 @@ extension _PlaybackMethods on _HomeScreenState {
   }) async {
     if (requestId != _playRequestId) return;
     final client = _client;
-    if (client == null && !track.isLocal) {
+    final offlinePath = track.isLocal ? null : _offline.pathFor(track.id);
+    if (client == null && !track.isLocal && offlinePath == null) {
       _selectTab(AppTab.library);
       return;
     }
@@ -38,6 +39,8 @@ extension _PlaybackMethods on _HomeScreenState {
           ? (track.localPath!.startsWith('content://')
                 ? AudioSource.uri(Uri.parse(track.localPath!), tag: mediaItem)
                 : AudioSource.file(track.localPath!, tag: mediaItem))
+          : offlinePath != null
+          ? AudioSource.file(offlinePath, tag: mediaItem)
           : AudioSource.uri(
               Uri.parse(client!.streamUrl(track.id)),
               tag: mediaItem,
@@ -79,6 +82,7 @@ extension _PlaybackMethods on _HomeScreenState {
         _error = '';
       });
       unawaited(_updateArtworkAccentColor(track));
+      _scrobbleStart(track);
 
       final event = ListeningEvent(
         id: track.id,

@@ -12,6 +12,10 @@ Nava is a cross-platform music player for [Navidrome](https://www.navidrome.org/
 - **Favorites and playlists** — save favorites and create local playlists.
 - **Listening stats** — review listening activity and the history stored on your device.
 - **Local recommendations** — a lightweight ranking algorithm uses listening recency, familiar artists and albums, and favorites to suggest tracks. It runs locally and does not require an AI API key.
+- **Offline downloads** — download tracks, albums, artists, playlists or all favorites. Downloaded music plays with no connection, and Nava opens with your downloads if the server is unreachable.
+- **Server sync** — playlists and favorites are merged both ways with your Navidrome account, so changes on one device appear on the others. Local files stay on the device.
+- **Scrobbling** — listens (half a track or four minutes) are sent to Navidrome, and so to any Last.fm or ListenBrainz linked to it. Listens made offline are queued and sent later.
+- **Desktop shortcuts** — Space, arrow keys, media keys, `L` to like, `S`/`R` for shuffle/repeat, `/` for search, `?` for the full list.
 - **Preferences** — adjust reduced motion, automatic track advancement, and the player visualizer.
 - **Cross-platform Flutter app** — platform folders are included for Android, iOS, Linux, macOS, Windows, and web.
 

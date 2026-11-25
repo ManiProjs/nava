@@ -173,6 +173,14 @@ extension _LibraryPageMethods on _HomeScreenState {
                             icon: Icon(Icons.shuffle_rounded),
                           ),
                           IconButton(
+                            tooltip: 'Download playlist',
+                            onPressed: tracks.isEmpty
+                                ? null
+                                : () =>
+                                      _downloadTracks(tracks, label: entry.key),
+                            icon: Icon(Icons.download_rounded),
+                          ),
+                          IconButton(
                             tooltip: 'Duplicate playlist',
                             onPressed: () => _duplicatePlaylist(entry.key),
                             icon: Icon(Icons.copy_rounded),

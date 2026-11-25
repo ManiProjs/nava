@@ -39,113 +39,126 @@ extension _CollectionMethods on _HomeScreenState {
                   ),
                 ),
                 Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.fromLTRB(22, 12, 22, 32),
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(14),
-                            child: _artwork(
-                              artworkTrack.coverArt,
-                              localArtworkPath: artworkTrack.localArtworkPath,
-                              size: 148,
-                              seed: isArtist ? title : artworkTrack.album,
+                  child: ListenableBuilder(
+                    listenable: _offline,
+                    builder: (context, _) => ListView(
+                      padding: EdgeInsets.fromLTRB(22, 12, 22, 32),
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(14),
+                              child: _artwork(
+                                artworkTrack.coverArt,
+                                localArtworkPath: artworkTrack.localArtworkPath,
+                                size: 148,
+                                seed: isArtist ? title : artworkTrack.album,
+                              ),
                             ),
-                          ),
-                          SizedBox(width: 20),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  title,
-                                  style: TextStyle(
-                                    fontFamily: 'SyneBold',
-                                    fontSize: 30,
-                                    height: 1.05,
-                                    letterSpacing: -1,
+                            SizedBox(width: 20),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  Text(
+                                    title,
+                                    style: TextStyle(
+                                      fontFamily: 'SyneBold',
+                                      fontSize: 30,
+                                      height: 1.05,
+                                      letterSpacing: -1,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 8),
-                                Text(
-                                  subtitle,
-                                  style: TextStyle(
-                                    color: C.muted,
-                                    fontSize: 12,
+                                  SizedBox(height: 8),
+                                  Text(
+                                    subtitle,
+                                    style: TextStyle(
+                                      color: C.muted,
+                                      fontSize: 12,
+                                    ),
                                   ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  '${tracks.length} ${tracks.length == 1 ? 'track' : 'tracks'}',
-                                  style: TextStyle(
-                                    color: C.muted,
-                                    fontSize: 12,
+                                  SizedBox(height: 5),
+                                  Text(
+                                    '${tracks.length} ${tracks.length == 1 ? 'track' : 'tracks'}',
+                                    style: TextStyle(
+                                      color: C.muted,
+                                      fontSize: 12,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 22),
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: FilledButton.icon(
-                          onPressed: tracks.isEmpty
-                              ? null
-                              : () => _play(tracks.first, playlist: tracks),
-                          icon: Icon(Icons.play_arrow_rounded),
-                          label: Text('Play all'),
+                          ],
                         ),
-                      ),
-                      SizedBox(height: 18),
-                      if (isArtist) ...[
-                        Text(
-                          'DISCOGRAPHY',
-                          style: TextStyle(
-                            color: C.muted,
-                            fontFamily: 'DMSansBold',
-                            fontSize: 10,
-                            letterSpacing: 1.5,
+                        SizedBox(height: 22),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: FilledButton.icon(
+                            onPressed: tracks.isEmpty
+                                ? null
+                                : () => _play(tracks.first, playlist: tracks),
+                            icon: Icon(Icons.play_arrow_rounded),
+                            label: Text('Play all'),
                           ),
                         ),
                         SizedBox(height: 10),
-                      ],
-                      for (var index = 0; index < tracks.length; index++) ...[
-                        if (isArtist &&
-                            (index == 0 ||
-                                tracks[index].album.toLowerCase() !=
-                                    tracks[index - 1].album.toLowerCase()))
-                          Padding(
-                            padding: EdgeInsets.only(top: index == 0 ? 0 : 14),
-                            child: InkWell(
-                              onTap: () => _openAlbum(tracks[index]),
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(vertical: 5),
-                                child: Text(
-                                  tracks[index].album,
-                                  style: TextStyle(
-                                    fontFamily: 'DMSansBold',
-                                    fontSize: 14,
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: _downloadCollectionButton(
+                            tracks,
+                            label: title,
+                          ),
+                        ),
+                        SizedBox(height: 18),
+                        if (isArtist) ...[
+                          Text(
+                            'DISCOGRAPHY',
+                            style: TextStyle(
+                              color: C.muted,
+                              fontFamily: 'DMSansBold',
+                              fontSize: 10,
+                              letterSpacing: 1.5,
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                        ],
+                        for (var index = 0; index < tracks.length; index++) ...[
+                          if (isArtist &&
+                              (index == 0 ||
+                                  tracks[index].album.toLowerCase() !=
+                                      tracks[index - 1].album.toLowerCase()))
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: index == 0 ? 0 : 14,
+                              ),
+                              child: InkWell(
+                                onTap: () => _openAlbum(tracks[index]),
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(vertical: 5),
+                                  child: Text(
+                                    tracks[index].album,
+                                    style: TextStyle(
+                                      fontFamily: 'DMSansBold',
+                                      fontSize: 14,
+                                    ),
                                   ),
                                 ),
                               ),
                             ),
+                          _trackRow(tracks[index], index),
+                        ],
+                        if (tracks.isEmpty)
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 30),
+                            child: Text(
+                              'No tracks found in this collection.',
+                              style: TextStyle(color: C.muted),
+                            ),
                           ),
-                        _trackRow(tracks[index], index),
                       ],
-                      if (tracks.isEmpty)
-                        Padding(
-                          padding: EdgeInsets.symmetric(vertical: 30),
-                          child: Text(
-                            'No tracks found in this collection.',
-                            style: TextStyle(color: C.muted),
-                          ),
-                        ),
-                    ],
+                    ),
                   ),
                 ),
               ],
@@ -324,11 +337,21 @@ extension _CollectionMethods on _HomeScreenState {
 
     final preferences = await SharedPreferences.getInstance();
     await preferences.setStringList(_favoritesKey, _favorites.toList());
+    _scheduleSync();
   }
 
   Future<void> _logout() async {
     final preferences = await SharedPreferences.getInstance();
     await _deleteCredentialJson(preferences);
+    // Sync bookkeeping and queued listens belong to the account being left.
+    _syncTimer?.cancel();
+    _syncState = const SyncState();
+    _scrobbleQueue = ScrobbleQueue();
+    _scrobbleTracker.stop();
+    _syncStatus = '';
+    _offlineMode = false;
+    await preferences.remove(_syncStateKey);
+    await preferences.remove(_scrobbleQueueKey);
     await _player.stop();
 
     if (!mounted) return;
@@ -361,6 +384,7 @@ extension _CollectionMethods on _HomeScreenState {
   Future<void> _savePlaylists() async {
     final preferences = await SharedPreferences.getInstance();
     await preferences.setString(_playlistsKey, jsonEncode(_playlists));
+    _scheduleSync();
   }
 
   Future<void> _createPlaylist() async {
@@ -440,6 +464,7 @@ extension _CollectionMethods on _HomeScreenState {
                 _addToPlaylist(track);
               },
             ),
+            _downloadMenuTile(track),
             ListTile(
               leading: Icon(Icons.person_outline_rounded),
               title: Text('Open artist'),

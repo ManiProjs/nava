@@ -531,6 +531,7 @@ extension _SettingsMethods on _HomeScreenState {
                                   _selectTab(AppTab.library);
                                 },
                               ),
+                              ..._offlineAndSyncSettings(isDesktop: !isMobile),
                               _settingsSection('PERSONAL TASTE'),
                               Padding(
                                 padding: EdgeInsets.only(bottom: 8),

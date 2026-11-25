@@ -130,9 +130,7 @@ extension _FlowLogicMethods on _HomeScreenState {
     final picks = _buildFlowQueue();
     if (picks.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Add more available songs to start Nava Flow.'),
-        ),
+        SnackBar(content: Text('Add more available songs to start Nava Flow.')),
       );
       return;
     }

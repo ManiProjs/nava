@@ -598,6 +598,7 @@ extension _HomeDataMethods on _HomeScreenState {
       }
     }
 
+    await _loadIntegrationSettings(preferences);
     _favorites = (preferences.getStringList(_favoritesKey) ?? []).toSet();
     _invalidateRecommendationCaches();
     _flowQueueDirty = true;
@@ -640,13 +641,17 @@ extension _HomeDataMethods on _HomeScreenState {
       return;
     }
 
+    NavidromeCredentials? restoredCredentials;
+    NavidromeClient? restoredClient;
     try {
       final json = jsonDecode(saved) as Map<String, dynamic>;
       final credentials = NavidromeCredentials.fromJson(json);
+      restoredCredentials = credentials;
       _url.text = credentials.baseUrl;
       _username.text = credentials.username;
 
       final client = NavidromeClient(credentials);
+      restoredClient = client;
       await client.connect();
 
       if (!mounted) return;
@@ -666,13 +671,29 @@ extension _HomeDataMethods on _HomeScreenState {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text(restoreWarnings.join(' '))));
       }
-    } catch (_) {
+    } catch (error) {
       if (!mounted) return;
-      _updateState(() {
-        _connected = false;
-        _showLogin = true;
-        _error = 'Reconnect to your Navidrome server to continue.';
-      });
+      if (restoredClient != null &&
+          isTransientNetworkError(error) &&
+          _offline.count > 0) {
+        // The saved login is fine; the server just can't be reached. Open with
+        // the downloaded music instead of sending the user back to sign-in.
+        _updateState(() {
+          _credentials = restoredCredentials;
+          _client = restoredClient;
+          _offlineMode = true;
+          _connected = false;
+          _tracks = _mergeLibraryTracks([..._offline.tracks, ..._localTracks]);
+          _libraryLoaded = true;
+          _error = restoreWarnings.join(' ');
+        });
+      } else {
+        _updateState(() {
+          _connected = false;
+          _showLogin = true;
+          _error = 'Reconnect to your Navidrome server to continue.';
+        });
+      }
     }
 
     if (mounted) _updateState(() {});
@@ -946,6 +967,7 @@ finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
         _loading = false;
         _connected = true;
       });
+      unawaited(_onServerReachable());
     } catch (error) {
       if (!mounted) return;
       _updateState(() {
@@ -1045,9 +1067,7 @@ finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($ptr) }
     // SAF-copied tracks have cache paths rather than their original URI. Clear
     // their indexed entries, then repopulate from any remaining watched folders.
     final localTracks = _localTracks
-        .where(
-          (track) => !(track.localPath ?? '').contains('/nava_imported/'),
-        )
+        .where((track) => !(track.localPath ?? '').contains('/nava_imported/'))
         .toList();
     final merged = _mergeLibraryTracks([
       ..._tracks.where((track) => !track.isLocal),
