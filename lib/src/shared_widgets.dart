@@ -12,7 +12,7 @@ extension _SharedWidgetMethods on _HomeScreenState {
         borderRadius: BorderRadius.circular(10),
       ),
       child: const Text(
-        'WARNING: Your Navidrome credentials are stored in plain text because of.... well.... Apple!.',
+        'WARNING: Your Navidrome credentials are stored in plain text on your platform. Blame Apple for this.',
         style: TextStyle(fontSize: 12, height: 1.5),
       ),
     );
